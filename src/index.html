@@ -1,22 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <link rel="stylesheet" href="styles.css" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>PakePlus App</title>
-        <script type="module" src="/main.js" defer></script>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinite Monkey Theorem Test</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <h1>无限猴子定理验证器</h1>
+    <p>无限猴子定理是来自埃米尔·博雷尔的一本于1909年出版谈概率的书籍，当中介绍了“打字的猴子”的概念。这个定理是概率论中的柯尔莫哥洛夫的零一律的其中一个命题的例子。不过，当埃米尔·博雷尔在书中提出零一律的这个特例时，柯尔莫哥洛夫的一般叙述并未给出（柯尔莫哥洛夫那本概率论的著作直到1933年才出版）。
+        零一律是概率论中的一个定律，它是安德雷·柯尔莫哥洛夫发现的，因此有时也叫柯尔莫哥洛夫零一律。其内容是：有些事件发生的概率不是几乎一（几乎发生），就是几乎零（几乎不发生）。这样的事件被称为“尾事件”。尾事件是由无限多的随机变量的序列来定义的。比如它不是与X1的值无关。比如我们扔无限多次硬币，则连续1000次数字面向上的事件是一个尾事件。</p><br>
+        <p>一般关于此定理的叙述为：有无限只猴子用无限的时间会产生特定的文章。
+            其他取代的叙述，可能是用大英图书馆或美国国会图书馆取代法国国家图书馆；另一个常见的版本是英语使用者常用的，就是猴子会打出莎士比亚的著作。欧洲大陆还有一种说法版是猴子打出大英百科全书。在《从一到无穷大》中，作者则引用了哈姆雷特的例子。</p><br>
+        <p>在这个测试中，我们将模拟无限猴子定理的过程，看看猴子是否能在有限的时间内打出你设置的字符串。</p><br>
+        <p>为了防止你的电脑爆炸 我们只考虑了小写英文字母</p>
+        <input type="text" id="string" placeholder="请输入目标字符串">
+        <button onclick="start()">开始运行程序</button>
+        <button onclick="fastfind()">快速运行程序</button>
+        <div id="probability"></div>
+        <div id="result"></div>
+        <p>注意：这个程序是一个模拟程序，实际上猴子打出特定字符串的概率是非常小的，因此请不要期望它能在短时间内完成。<br>使用快速运行你将无法看到过程 但这会使运算速度快几万倍</p>
+        <script>
+    var letter = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+    
+    function start() {
+        showprobability();
+        var target = document.getElementById("string").value;
+        var targetLength = target.length;
+        var testcount = 0;
+        var test = "";
+        var resultDiv = document.getElementById("result");
+        var interval = setInterval(() => {
+            for (let i = 0; i < targetLength; i++) {
+                var randomIndex = Math.floor(Math.random() * letter.length);
+                if (randomIndex === 0) {
+                    randomIndex = 1;
+                }
+                test = test + letter[randomIndex -1];
+            }
+            if (test === target) {
+                clearInterval(interval);
+                resultDiv.innerHTML = "猴子在" + testcount + "次尝试后成功打出了目标字符串：" + target;
+            } else {
+                testcount++;
+                resultDiv.innerHTML = "当前尝试次数：" + testcount + "<br>当前字符串：" + test;
+                test = "";
+            }
+        }, 0);
+    }
+    function fastfind(){
+        showprobability();
+        var found = "0"
+        var target = document.getElementById("string").value;
+        var targetLength = target.length;
+        var testcount = 0;
+        var test = "";
+        var resultDiv = document.getElementById("result");
+        while (found === "0") {
+            for (let i = 0; i < targetLength; i++) {
+                var randomIndex = Math.floor(Math.random() * letter.length);
+                if (randomIndex === 0) {
+                    randomIndex = 1;
+                }
+                test = test + letter[randomIndex -1];
+            }
+            if (test === target) {
+                found = "1"
+                resultDiv.innerHTML = "猴子在" + testcount + "次尝试后成功打出了目标字符串：" + target;
+            } else {
+                testcount++;
+                found = "0"
+                test = "";
+            }
+        }
+    }
+    function showprobability() {
+    var target = document.getElementById("string").value;
+    var targetLength = target.length;
+    var probability = Math.pow(1 / letter.length, targetLength);
+    var probabilityDiv = document.getElementById("probability");
+    var percentage;
 
-    <body>
-        <main class="container">
-            <h1>Welcome to PakePlus</h1>
+    if (targetLength > 15) {
+        percentage = (probability * 100).toFixed(30); // 保留 30 位小数
+    } else if (targetLength > 8) {
+        percentage = (probability * 100).toFixed(20); // 保留 20 位小数
+    } else {
+        percentage = (probability * 100).toFixed(10); // 保留 10 位小数
+    }
 
-            <form class="row" id="greet-form">
-                <input id="greet-input" placeholder="Enter a name..." />
-                <button type="submit">Greet</button>
-            </form>
-            <p id="greet-msg"></p>
-        </main>
-    </body>
+    probabilityDiv.innerHTML = "打出目标字符串的概率为：" + percentage + "%";
+}
+        </script>
+</body>
 </html>
